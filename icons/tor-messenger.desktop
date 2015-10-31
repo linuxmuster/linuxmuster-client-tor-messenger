@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Tor Browser Bundle
+Name=Tor Messenger
 Comment=Installing and starting the Tor Messenger
 Comment[de]=Installiert und started den Tor Messenger
 TryExec=linuxmuster-client-tor-messenger
