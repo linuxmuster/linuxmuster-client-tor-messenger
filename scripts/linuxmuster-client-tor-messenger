@@ -1,0 +1,132 @@
+#!/usr/bin/perl -w
+# This Script (linuxmuster-client-tor-messenger) was created by Rüdiger Beck
+# It is released under the GPL Version 3
+# For Bugs send mail to (jeffbeck-at-web.de)
+
+use strict;
+use Getopt::Long;
+use File::Basename;
+use Log::Log4perl qw(:easy);
+use English;
+use File::Path qw(remove_tree);
+
+my $home=$ENV{'HOME'};
+my $UID_name=getpwuid($UID);
+my $EUID_name=getpwuid($EUID);
+
+my $version="0.1.0b3";
+my $tbb_lang="en-US";
+
+# path to settings
+my $settings="Einstellungen/tor-messenger";
+my $settings_abs=$home."/".$settings;
+
+# configure logging
+my $log="/tmp/linuxmuster-client-tor-messenger.log.".$UID_name;
+Log::Log4perl->easy_init({ 
+                level   => $INFO,
+                file    => ">>$log" } );    
+
+
+my $config_dir="/etc/linuxmuster-client/tor-messenger";
+my $help=0;
+my $info=0;
+
+
+# Parsen der Optionen
+my $testopt=GetOptions(
+           "help|h" => \$help,
+           "info|i" => \$info,
+          );
+
+# Prüfen, ob Optionen erkannt wurden, sonst Abbruch
+&check_options($testopt);
+
+
+
+if ($help==1){
+   print('
+
+This script installs the tor messenger for a user
+
+Options
+  -h  / --help  
+   show this help
+
+');
+   print "\n";
+   exit;
+}
+
+
+#if (not -d $config_dir){
+#    print "\nERROR: Configuration directory\n",
+#          "    $config_dir\n",
+#          " does not exist!\n\n";
+#    exit;
+#}
+
+
+my $downloads="/var/lib/linuxmuster-client-tor-messenger/downloads/de";
+
+my $target_dir="/tmp/".$UID_name."-linuxmuster-client-tor-messenger";
+my $tbb_file="";
+
+
+my $uname = `uname -m`;
+chomp($uname);
+
+if ($uname eq "x86_64"){
+    $tbb_file=$downloads."/tor-messenger-linux64-".$version."_".$tbb_lang.".tar.xz";
+} elsif ($uname eq "i686"){
+    $tbb_file=$downloads."/tor-messenger-linux32-".$version."_".$tbb_lang.".tar.xz";
+} else {
+    print "\nCould not detect architecture of the kernel from $uname.\n\n";
+    exit;
+}
+
+
+# Clean up if necessary
+if (-d $target_dir){
+    print "Deleting $target_dir\n";
+    remove_tree("$target_dir");
+}
+
+
+# Installing
+print "Unpacking\n  $tbb_file\n  to $target_dir\n";
+system("mkdir -p $target_dir");
+my $command="tar xJvf $tbb_file -C $target_dir";
+print "$command\n";
+system("$command");
+
+
+# Starting
+my $binary_dir=$target_dir."/tor-messenger";
+my $binary="./start-tor-messenger.desktop";
+system("cd $binary_dir; $binary");
+
+# after clean shutdown
+print "Shutdown complete\n";
+
+
+
+
+############################################################
+# subs
+############################################################
+sub  check_options{
+   my ($parse_ergebnis) = @_;
+   if (not $parse_ergebnis==1){
+      my @list = split(/\//,$0);
+      my $scriptname = pop @list;
+      print "\nYou have made a mistake, when specifying options.\n"; 
+      print "See error message above. \n\n";
+      print "... $scriptname is terminating.\n\n";
+      exit;
+   } else {
+      #print "All options  were recognized.\n";
+   }
+
+}
+

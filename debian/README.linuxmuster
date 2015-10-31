@@ -1,0 +1,33 @@
+############################################################
+# Create a package:
+
+
+cd linuxmuster-client-tor-messenger
+dch -i
+make deb
+
+
+############################################################
+# updating for a new TBB Version:
+
+Edit (=change Version number) in:
+
+   1) scripts/linuxmuster-client-tor-messenger-downloader
+      Variable VERSION at the beginning of the file
+   2) scripts/linuxmuster-client-tor-messenger
+      Variable $version at the beginning of the file
+   3) debian/contol   
+      First Line of package description
+   4) dch -i -> New upstream Release 
+
+
+
+Test the changes with:
+
+# Test the download of the new TBB as root:
+cd scripts
+sudo ./linuxmuster-client-tor-messenger-downloader
+
+# Test if the newly downloaded file is run as a normal user:
+cd scripts
+./linuxmuster-client-tor-messenger

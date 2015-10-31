@@ -1,0 +1,104 @@
+#!/bin/sh
+
+VERSION=0.1.0b3
+DOWNLOAD_LANG=en-US
+DOWNLOADS=/var/lib/linuxmuster-client-tor-messenger/downloads/${DOWNLOAD_LANG}
+CLEANUP=/var/lib/linuxmuster-client-tor-messenger
+
+mkdir -p $DOWNLOADS
+
+# 32bit or 64bit
+ARCH=`uname -m`
+
+echo "Architecture with uname -m: $ARCH"
+echo "Architecture manually set: $1 (empty if not manually set)"
+
+
+# Manual override
+case "$1" in
+    "")
+    # do nothing
+    ;;
+ 
+    32bit)
+    ARCH=32bit
+    ;;
+
+    64bit)
+    ARCH=64bit
+    ;;
+
+    cleanup)
+    #ls -al  $CLEANUP
+    echo "Removing $CLEANUP ...";
+    rm -rf $CLEANUP
+    exit
+    ;;
+
+    help)
+    echo " "
+    echo "Option: select architecture manually"
+    echo "   32bit    : Download 32bit linux"
+    echo "   32bit    : Download 64bit linux"
+    echo "   cleanup  : Delete all downloads"
+    echo " "
+
+    exit
+    ;;
+
+    *)
+    echo " "
+    echo "Use option 'help' for information"
+    echo " "
+    exit 0
+    ;;
+esac
+
+
+
+# Verifying
+# Get the keys
+# Erinn Clark
+#gpg --keyserver x-hkp://pool.sks-keyservers.net --recv-keys 0x416F061063FEE659
+
+
+
+# Download
+case "$ARCH" in
+    i686|32bit)
+    # 32bit Version
+    # https://dist.torproject.org/tormessenger/0.1.0b3/tor-messenger-linux32-0.1.0b3_en-US.tar.xz
+
+    FILE="tor-messenger-linux32-${VERSION}_en-US.tar.xz"
+    WEB="https://dist.torproject.org/tormessenger/${VERSION}/"
+
+    cd $DOWNLOADS; wget -t 10 -c --timestamping $WEB$FILE
+    #cd $DOWNLOADS; wget -t 10 -c --timestamping $WEB$FILE.asc
+    #cd $DOWNLOADS; gpg --verify $FILE $FILE.asc
+    ;;
+
+    x86_64|64bit)
+    # 64bit Version
+    # https://dist.torproject.org/tormessenger/0.1.0b3/tor-messenger-linux64-0.1.0b3_en-US.tar.xz
+
+    FILE="tor-messenger-linux64-${VERSION}_en-US.tar.xz"
+    WEB="https://dist.torproject.org/tormessenger/${VERSION}/"
+    cd $DOWNLOADS; wget -t 10 -c --timestamping $WEB$FILE
+    #cd $DOWNLOADS; wget -t 10 -c --timestamping $WEB$FILE.asc
+    #cd $DOWNLOADS; gpg --verify $FILE $FILE.asc
+    ;;
+
+    *)
+    echo " "
+    echo "I dont know if you have 32bit or 64bit system"
+    echo "Use option 'help' for information"
+    echo " "
+    exit 0
+    ;;
+esac
+
+
+
+
+
+echo "########## DONE: Downloading tor messenger"

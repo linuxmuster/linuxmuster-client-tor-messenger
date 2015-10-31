@@ -1,0 +1,16 @@
+Source: linuxmuster-client-tor-messenger
+Section: admin
+Priority: optional
+Maintainer: Ruediger Beck <jeffbeck@web.de>
+Build-Depends: debhelper , perl-base, fakeroot
+Standards-Version: 3.5.2
+
+
+
+Package: linuxmuster-client-tor-messenger
+Architecture: all
+Suggests: 
+Pre-Depends: wget
+Depends: liblog-log4perl-perl 
+Description: Download Tor Messenger 
+  Make Tor Messenger installable/usable for every user.
