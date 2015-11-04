@@ -15,7 +15,7 @@ my $UID_name=getpwuid($UID);
 my $EUID_name=getpwuid($EUID);
 
 my $version="0.1.0b3";
-my $tbb_lang="en-US";
+my $tm_lang="en-US";
 
 # path to settings
 my $settings="Einstellungen/tor-messenger";
@@ -67,7 +67,7 @@ Options
 #}
 
 
-my $downloads="/var/lib/linuxmuster-client-tor-messenger/downloads/de";
+my $downloads="/var/lib/linuxmuster-client-tor-messenger/downloads/".$tm_lang;
 
 my $target_dir="/tmp/".$UID_name."-linuxmuster-client-tor-messenger";
 my $tbb_file="";
@@ -77,9 +77,9 @@ my $uname = `uname -m`;
 chomp($uname);
 
 if ($uname eq "x86_64"){
-    $tbb_file=$downloads."/tor-messenger-linux64-".$version."_".$tbb_lang.".tar.xz";
+    $tbb_file=$downloads."/tor-messenger-linux64-".$version."_".$tm_lang.".tar.xz";
 } elsif ($uname eq "i686"){
-    $tbb_file=$downloads."/tor-messenger-linux32-".$version."_".$tbb_lang.".tar.xz";
+    $tbb_file=$downloads."/tor-messenger-linux32-".$version."_".$tm_lang.".tar.xz";
 } else {
     print "\nCould not detect architecture of the kernel from $uname.\n\n";
     exit;
